@@ -9,7 +9,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score, average_precision_score, f1_score, precision_score, recall_score, accuracy_score, balanced_accuracy_score, confusion_matrix, brier_score_loss, log_loss
 from xgboost import XGBClassifier
-from lightgbm import LGBMClassifier
 
 from model_spec import CAT_COLS, NUM_COLS
 from features import add_model_features
@@ -45,13 +44,12 @@ def build_classifier(name, params):
         return RandomForestClassifier(**params, max_features='sqrt', n_jobs=-1, random_state=SEED, class_weight='balanced')
     if name == 'xgboost':
         return XGBClassifier(**params, subsample=.85, colsample_bytree=.85, reg_alpha=.1, reg_lambda=1.5, tree_method='hist', eval_metric='aucpr', n_jobs=-1, random_state=SEED, scale_pos_weight=1.0)
-    return LGBMClassifier(**params, subsample=.85, colsample_bytree=.85, reg_alpha=.1, reg_lambda=1.5, n_jobs=-1, verbosity=-1, random_state=SEED, scale_pos_weight=1.0)
+    raise ValueError(f"Unknown classifier name: {name}")
 
 SEARCH = {
     'logistic_regression': [{'C': 0.5}, {'C': 1.0}],
     'random_forest': [{'n_estimators': 150, 'max_depth': 10, 'min_samples_leaf': 4}],
-    'xgboost': [{'n_estimators': 200, 'max_depth': 4, 'learning_rate': .03, 'min_child_weight': 5}],
-    'lightgbm': [{'n_estimators': 250, 'num_leaves': 25, 'learning_rate': .03, 'min_child_samples': 50}]
+    'xgboost': [{'n_estimators': 200, 'max_depth': 4, 'learning_rate': .03, 'min_child_weight': 5}]
 }
 
 def platt_fit(p, y):

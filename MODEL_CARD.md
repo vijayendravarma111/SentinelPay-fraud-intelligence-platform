@@ -26,7 +26,7 @@ With fraud detection, a high accuracy number can be misleading because genuine t
 
 ## Model selection
 
-The project evaluates Logistic Regression, Random Forest, XGBoost and LightGBM on a chronological validation segment. The selected model is the model with the strongest validation PR-AUC/F1/ROC-AUC combination. A dedicated later calibration segment is then used for sigmoid probability calibration. The final future test is untouched.
+The project evaluates Logistic Regression, Random Forest, and XGBoost on a chronological validation segment. The selected model is the model with the strongest validation PR-AUC/F1/ROC-AUC combination. A dedicated later calibration segment is then used for sigmoid probability calibration. The final future test is untouched.
 
 ## Decision architecture
 

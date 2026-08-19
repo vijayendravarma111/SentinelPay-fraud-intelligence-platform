@@ -98,7 +98,7 @@
       <section class="panel">
         <div class="section-title">Model Performance Comparison (Validation Benchmark Evaluation)</div>
         <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 20px;">
-          Model selection benchmark evaluated across candidate algorithms on the validation split (15,000 transactions, rows 60,000–75,000) under validation tuning thresholds. <b>XGBoost Classifier</b> was selected as the winning production model due to superior Recall (72.43%) and F1 Score (69.93%).
+          Model selection benchmark evaluated across candidate algorithms on the validation split (15,000 transactions, rows 60,000–75,000) under validation tuning thresholds. <b>XGBoost Classifier</b> was selected as the winning production model due to superior PR-AUC (76.24%), Recall (72.43%), and F1 Score (69.93%).
         </p>
 
         <!-- Chart Container -->
@@ -112,6 +112,7 @@
             <thead>
               <tr>
                 <th>Model</th>
+                <th style="color: #10b981; background: rgba(16, 185, 129, 0.15); border-bottom: 2px solid #10b981;">PR-AUC</th>
                 <th>Accuracy</th>
                 <th>Precision</th>
                 <th>Recall</th>
@@ -121,15 +122,8 @@
             </thead>
             <tbody>
               <tr>
-                <td><b>LightGBM</b></td>
-                <td>97.03%</td>
-                <td>72.65%</td>
-                <td>67.36%</td>
-                <td>69.91%</td>
-                <td>95.66%</td>
-              </tr>
-              <tr>
                 <td><b>Logistic Regression</b></td>
+                <td style="color: #10b981; font-weight: 700; background: rgba(16, 185, 129, 0.08);">70.62%</td>
                 <td>96.83%</td>
                 <td>76.21%</td>
                 <td>55.40%</td>
@@ -138,6 +132,7 @@
               </tr>
               <tr>
                 <td><b>Random Forest</b></td>
+                <td style="color: #10b981; font-weight: 700; background: rgba(16, 185, 129, 0.08);">71.64%</td>
                 <td>96.43%</td>
                 <td>64.65%</td>
                 <td>66.84%</td>
@@ -146,6 +141,7 @@
               </tr>
               <tr style="background: rgba(37, 99, 235, 0.08);">
                 <td><b>XGBoost</b> <span class="prod-tag">Production Model</span></td>
+                <td style="color: #10b981; font-weight: 800; background: rgba(16, 185, 129, 0.18);"><b>76.24%</b></td>
                 <td><b>96.81%</b></td>
                 <td><b>67.60%</b></td>
                 <td><b>72.43%</b></td>
@@ -183,7 +179,7 @@
           </div>
           <div class="kpi-card">
             <div class="label">False Positive Rate</div>
-            <div class="value">0.95%</div>
+            <div class="value">0.92%</div>
           </div>
           <div class="kpi-card">
             <div class="label">Brier Score</div>
@@ -191,7 +187,7 @@
           </div>
         </div>
         <p style="font-size: 13px; color: var(--text-dim); margin-top: 16px; font-style: italic;">
-          Evaluated on the untouched future test split (15,000 transactions, rows 85,000–100,000) after Platt sigmoid calibration under the 0.93% FPR operational policy constraint (calibrated threshold = 0.45).
+          Evaluated on the untouched future test split (15,000 transactions, rows 85,000–100,000) after Platt sigmoid calibration under the 0.92% FPR operational policy constraint (calibrated threshold = 0.45).
         </p>
       </section>
 
@@ -199,7 +195,7 @@
       <section class="panel">
         <div class="section-title">Production Model Confusion Matrix (Final Untouched Test Split Evaluation)</div>
         <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">
-          Operating confusion matrix for the production XGBoost model on the 15,000 untouched future test transactions at the 0.93% FPR operational policy threshold.
+          Operating confusion matrix for the production XGBoost model on the 15,000 untouched future test transactions at the 0.92% FPR operational policy threshold.
         </p>
 
         <div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;">
@@ -246,9 +242,9 @@
             <div>• <b>Precision</b> = TP / (TP + FP) = 459 / 601 = <b>76.37%</b></div>
             <div>• <b>Recall</b> = TP / (TP + FN) = 459 / 767 = <b>59.84%</b></div>
             <div>• <b>F1 Score</b> = 2 × P × R / (P + R) = <b>67.11%</b></div>
-            <div>• <b>FPR</b> = FP / (FP + TN) = 142 / 14233 = <b>1.00%</b></div>
+            <div>• <b>FPR</b> = FP / (FP + TN) = 131 / 14222 = <b>0.92%</b></div>
             <div style="margin-top: 10px; font-size: 12px; color: var(--text-dim); font-style: italic;">
-              Note: Validation benchmark metrics (above) reflect model selection during hyperparameter tuning on the validation split, whereas Production Operating metrics reflect the calibrated XGBoost classifier evaluated on the untouched future test split under the 0.93% FPR operational policy.
+              Note: Validation benchmark metrics (above) reflect model selection during hyperparameter tuning on the validation split, whereas Production Operating metrics reflect the calibrated XGBoost classifier evaluated on the untouched future test split under the 0.92% FPR operational policy.
             </div>
           </div>
         </div>
@@ -272,29 +268,23 @@
         new Chart(ctx, {
           type: 'bar',
           data: {
-            labels: ['Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC-AUC'],
+            labels: ['PR-AUC', 'Accuracy', 'Precision', 'Recall', 'F1 Score', 'ROC-AUC'],
             datasets: [
               {
-                label: 'LightGBM',
-                data: [97.03, 72.65, 67.36, 69.91, 95.66],
-                backgroundColor: '#38bdf8',
-                borderRadius: 4
-              },
-              {
                 label: 'Logistic Regression',
-                data: [96.83, 76.21, 55.40, 64.16, 95.07],
+                data: [70.62, 96.83, 76.21, 55.40, 64.16, 95.07],
                 backgroundColor: '#94a3b8',
                 borderRadius: 4
               },
               {
                 label: 'Random Forest',
-                data: [96.43, 64.65, 66.84, 65.73, 94.78],
+                data: [71.64, 96.43, 64.65, 66.84, 65.73, 94.78],
                 backgroundColor: '#f59e0b',
                 borderRadius: 4
               },
               {
                 label: 'XGBoost (Production)',
-                data: [96.81, 67.60, 72.43, 69.93, 95.67],
+                data: [76.24, 96.81, 67.60, 72.43, 69.93, 95.67],
                 backgroundColor: '#2563eb',
                 borderRadius: 4
               }
